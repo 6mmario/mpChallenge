@@ -1,0 +1,108 @@
+/* Login.css */
+
+/* Contenedor principal: centra el formulario vertical y horizontalmente */
+/* Centra el formulario de login ocupando toda la pantalla */
+.login-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f3f4f6; /* opcional: fondo gris claro */
+  }
+  
+  /* Formulario: fondo blanco, sombra y bordes redondeados */
+  .login-form {
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 0.5rem; /* radio 8px */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 20rem; /* ancho fijo de 320px */
+    position: relative;
+  }
+  
+  /* Estilo para el logo centrado en la parte superior */
+  .login-form .logo {
+    display: block;
+    margin: 0 auto 1rem; /* separa 16px abajo */
+    width: 80px; /* ajusta según tu necesidad */
+    height: auto;
+  }
+  
+  /* Título */
+  .login-form h2 {
+    text-align: center;
+    font-size: 1.5rem; /* 24px */
+    font-weight: 600;
+    margin-bottom: 1.5rem; /* 24px */
+    color: #1f2937; /* gris oscuro */
+  }
+  
+  /* Etiquetas de cada campo */
+  .login-form label {
+    display: block;
+    margin-bottom: 0.25rem; /* 4px */
+    font-weight: 500;
+    color: #4b5563; /* gris medio */
+  }
+  
+  /* Inputs: ancho completo, bordes y padding */
+  .login-form input {
+    width: 100%;
+    padding: 0.5rem; /* 8px */
+    margin-bottom: 1rem; /* 16px */
+    border: 1px solid #d1d5db; /* gris claro */
+    border-radius: 0.375rem; /* 6px */
+    font-size: 1rem; /* 16px */
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  
+  /* Focus en inputs */
+  .login-form input:focus {
+    border-color: #3b82f6; /* azul */
+    box-shadow: 0 0 0 1px #3b82f6;
+  }
+  
+  /* Mensaje de error */
+  .login-form .error-message {
+    color: #dc2626; /* rojo */
+    font-size: 0.875rem; /* 14px */
+    margin-bottom: 1rem; /* 16px */
+  }
+  
+  /* Botón principal */
+  .login-form button {
+    width: 100%;
+    padding: 0.5rem; /* 8px */
+    border: none;
+    border-radius: 0.375rem; /* 6px */
+    font-size: 1rem; /* 16px */
+    font-weight: 600;
+    cursor: pointer;
+    background-color: #2563eb; /* azul primario */
+    color: #ffffff;
+    transition: background-color 0.2s;
+  }
+  
+  /* Hover en botón */
+  .login-form button:hover:not(:disabled) {
+    background-color: #1e40af; /* azul más oscuro */
+  }
+  
+  /* Botón deshabilitado */
+  .login-form button:disabled {
+    background-color: #9ca3af; /* gris intermedio */
+    cursor: not-allowed;
+  }
+  
+  /* Pequeño ajuste responsivo (opcional) */
+  @media (max-width: 400px) {
+    .login-form {
+      width: 90%; /* que no sea tan ancho en pantallas pequeñas */
+      padding: 1.5rem;
+    }
+  }

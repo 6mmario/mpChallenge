@@ -1,0 +1,229 @@
+
+
+/* Dashboard.css */
+
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+}
+
+.dashboard-title {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.dashboard-card {
+  background-color: #fff;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  text-align: left;
+}
+
+.dashboard-button {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  margin-top: 1rem;
+  border-radius: 0.375rem;
+  border: none;
+  background-color: #2563eb;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.dashboard-form {
+  margin-top: 1rem;
+  width: 100%;
+  max-width: 400px;
+}
+
+.dashboard-textarea {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  resize: vertical;
+  font-size: 1rem;
+}
+
+.dashboard-form-button {
+  margin-top: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  border-radius: 0.375rem;
+  border: none;
+  background-color: #2563eb;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+
+/* Styles for cases list */
+.cases-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.case-item {
+  background-color: #ffffff;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.case-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.case-desc {
+  font-weight: 500;
+  margin: 0;
+}
+
+.case-status {
+  margin: 0.25rem 0 0 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status-pendiente {
+  color: #d97706; /* amber-600 */
+}
+
+.status-en_progreso {
+  color: #2563eb; /* blue-600 */
+}
+
+.status-cerrado {
+  color: #16a34a; /* green-600 */
+}
+
+.case-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.case-button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.modify-button {
+  background-color: #2563eb; /* blue-600 */
+  color: #ffffff;
+}
+
+.modify-button:hover {
+  background-color: #1e40af; /* blue-800 */
+}
+
+.assign-button {
+  background-color: #10b981; /* emerald-500 */
+  color: #ffffff;
+}
+
+.assign-button:hover {
+  background-color: #047857; /* emerald-700 */
+}
+.dashboard-search {
+  width: 100%;
+  max-width: 600px;
+  margin: 1.5rem 0;
+  display: flex;
+  justify-content: center;
+}
+
+.dashboard-search-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.dashboard-search-input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 1px #2563eb;
+}
+
+/* Table container for responsive scroll */
+.dashboard-table-container {
+  width: 100%;
+  max-width: 800px;
+  overflow-x: auto;
+  margin-top: 1rem;
+}
+
+/* Table styling */
+.dashboard-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #ffffff;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-table th,
+.dashboard-table td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.dashboard-table th {
+  background-color: #f9fafb;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.875rem;
+  color: #4b5563;
+}
+
+.dashboard-table tr:hover {
+  background-color: #f3f4f6;
+}
+
+.dashboard-table td {
+  font-size: 0.875rem;
+  color: #1f2937;
+}
+
+/* Ensure last row has no bottom border */
+.dashboard-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Adjust action buttons inside table cells */
+.dashboard-table .case-button {
+  margin-right: 0.5rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .dashboard-table th,
+  .dashboard-table td {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.75rem;
+  }
+
+  .dashboard-search-input {
+    font-size: 0.875rem;
+    padding: 0.5rem 0.75rem;
+  }
+}

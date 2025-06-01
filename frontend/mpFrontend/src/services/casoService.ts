@@ -1,4 +1,5 @@
 import type { Caso } from "../models/Caso";
+import type { Informe } from "../models/Informe";
 import type { NuevoCaso } from "../models/NuevoCaso";
 import { request } from "./api";
 
@@ -28,5 +29,29 @@ export async function crearCaso(
   return request<{ nuevoCasoId: number }>("/casos/nuevo", {
     method: "POST",
     body: nuevoCaso,
+  });
+}
+
+
+
+/**
+ * Envía un nuevo informe asociado a un caso.
+ * @param informe Datos del informe excepto correoElectronico y casoID.
+ * @param correoElectronico Correo del fiscal logueado.
+ * @param casoID ID del caso al que se le agrega el informe.
+ * @returns Promise<{ nuevoInformeID: number }> ID del informe creado.
+ */
+export async function agregarInforme(
+  informe: Omit<Informe, 'correoElectronico' | 'casoID'>,
+  correoElectronico: string,
+  casoID: number
+): Promise<{ nuevoInformeID: number }> {
+  return request<{ nuevoInformeID: number }>("/casos/informe", {
+    method: "POST",
+    headers: {
+      correoElectronico,
+      idCaso: casoID.toString(),
+    },
+    body: informe,
   });
 }

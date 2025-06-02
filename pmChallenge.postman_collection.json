@@ -1,0 +1,265 @@
+{
+	"info": {
+		"_postman_id": "06898405-791b-46f5-8d9f-37051c565214",
+		"name": "pmChallenge",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "9537150"
+	},
+	"item": [
+		{
+			"name": "local",
+			"item": [
+				{
+					"name": "Usuario",
+					"item": [
+						{
+							"name": "login",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"correo\":\"momorale@mp.gob.gt\",\n    \"password\":\"6mmario\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{local}}:3000/usuario/auth",
+									"host": [
+										"{{local}}"
+									],
+									"port": "3000",
+									"path": [
+										"usuario",
+										"auth"
+									]
+								},
+								"description": "Autenticación de Usuario\n\nEste endpoint permite a los usuarios autenticar sus credenciales y obtener acceso al sistema.\n\n  \n\n**Cuerpo de la solicitud**\n\n- **correo** (string): La dirección de correo electrónico del usuario.\n    \n- **password** (string): La contraseña del usuario.\n    \n\n**Respuesta**\n\nEn caso de autenticación exitosa, el servidor responde con un código de estado 200 y un objeto JSON que contiene los siguientes campos:\n\n- **FiscalID** (number): El ID fiscal del usuario.\n    \n- **Nombre** (string): El nombre del usuario.\n    \n- **CorreoElectronico** (string): La dirección de correo electrónico del usuario.\n    \n- **Usuario** (string): El nombre de usuario del usuario.\n    \n- **Rol** (string): El rol del usuario.\n    \n- **FiscaliaID** (number): El ID de la fiscalía del usuario.\n    \n- **Permisos** (string): Los permisos asignados al usuario."
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Casos",
+					"item": [
+						{
+							"name": "Nuevo Caso",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"correoElectronico\":\"momorale@mp.gob.gt\",\n    \"descripcion\":\"asalto\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{local}}:3000/casos/nuevo",
+									"host": [
+										"{{local}}"
+									],
+									"port": "3000",
+									"path": [
+										"casos",
+										"nuevo"
+									]
+								},
+								"description": "Agregar Nuevo Caso\n\nEste endpoint permite agregar un nuevo caso mediante una solicitud HTTP POST a {{local}}:3000/casos/nuevo.\n\n**Cuerpo de la solicitud**\n\n- **correoElectronico** (string): La dirección de correo electrónico asociada con el caso.\n    \n- **descripcion** (string): Una breve descripción del caso.\n    \n\n### Response\n\n- Status: 201\n    \n- Content-Type: application/json\n    \n- mensaje (string): Caso creado exitosamente\n    \n- nuevoCasoID (number): Identificador del caso creado"
+							},
+							"response": []
+						},
+						{
+							"name": "Listar Casos",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "correoElectronico",
+										"value": "momorale@mp.gob.gt",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{local}}:3000/casos",
+									"host": [
+										"{{local}}"
+									],
+									"port": "3000",
+									"path": [
+										"casos"
+									]
+								},
+								"description": "Obtener Lista de Casos\n\nEste endpoint realiza una solicitud HTTP GET para recuperar una lista de casos desde el servidor especificado. La solicitud no incluye cuerpo.\n\n**Respuesta**\n\nLa respuesta tendrá un código de estado 200 y un tipo de contenido application/json. Incluirá un arreglo de objetos, cada uno representando un caso, con las siguientes claves:\n\n- **CasoID** (número): El ID del caso.\n    \n- **FechaRegistro** (string): La fecha de registro del caso.\n    \n- **Estado** (string): El estado del caso.\n    \n- **Progreso** (string): El progreso del caso.\n    \n- **Descripcion** (string): La descripción del caso.\n    \n- **FechaUltimaActualizacion** (string): La fecha de la última actualización del caso.\n    \n- **FiscalID** (número): El ID del fiscal asociado al caso."
+							},
+							"response": []
+						},
+						{
+							"name": "nuevo Informe",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "correoElectronico",
+										"value": "momorale@mp.gob.gt",
+										"type": "text"
+									},
+									{
+										"key": "idCaso",
+										"value": "6",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"TipoInforme\":\"Avance en investigacion\",\n    \"DescripcionBreve\":\"se ubica la informacion y la direccion exacta del evento\",\n    \"Estado\":\"EN_PROGRESO\",\n    \"Progreso\":\"10%\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{local}}:3000/casos/informe",
+									"host": [
+										"{{local}}"
+									],
+									"port": "3000",
+									"path": [
+										"casos",
+										"informe"
+									]
+								},
+								"description": "**Creación de Nuevo Informe**\n\nEste endpoint permite la creación de un nuevo informe relacionado con casos utilizando los detalles proporcionados.\n\n**Cuerpo de la solicitud**\n\n- **TipoInforme** (string): Tipo de informe, por ejemplo, “Avance en investigación”.\n    \n- **DescripcionBreve** (string): Breve descripción del informe.\n    \n- **Estado** (string): Estado actual del informe, por ejemplo, “EN_PROGRESO”.\n    \n- **Progreso** (string): Porcentaje o estado de avance del informe, por ejemplo, “10%”.\n    \n\n### Response\n\nThe response is in JSON format with the following schema:\n\n``` json\n{\n    \"type\": \"object\",\n    \"properties\": {\n        \"mensaje\": {\n            \"type\": \"string\"\n        },\n        \"nuevoInformeID\": {\n            \"type\": \"integer\"\n        }\n    }\n}\n\n ```\n\n- Status: 201\n    \n- Content-Type: application/json\n    \n- mensaje (string): A message related to the response\n    \n- nuevoInformeID (integer): ID of the newly created informe"
+							},
+							"response": []
+						},
+						{
+							"name": "Reasignar",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "correoElectronico",
+										"value": "momorale@mp.gob.gt",
+										"type": "text"
+									},
+									{
+										"key": "idCaso",
+										"value": "6",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "\n{\n  \"casoID\": 1,\n  \"nuevoFiscalID\": 2\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{local}}:3000/casos/reasignar",
+									"host": [
+										"{{local}}"
+									],
+									"port": "3000",
+									"path": [
+										"casos",
+										"reasignar"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Fiscales",
+					"item": [
+						{
+							"name": "Fiscales",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{local}}:3000/fiscales",
+									"host": [
+										"{{local}}"
+									],
+									"port": "3000",
+									"path": [
+										"fiscales"
+									]
+								},
+								"description": "Obtener Lista de Fiscales\n\nEste endpoint recupera un listado de registros de fiscales.  \n\n**Solicitud**\n\nNo se requiere cuerpo en la solicitud para este endpoint.\n\n**Respuesta**\n\n- **Estado:** 200 OK\n    \n- **Content-Type:** application/json\n    \n\n**Cuerpo de la respuesta**\n\nEl cuerpo de la respuesta es un arreglo de objetos JSON, cada uno representando un registro de fiscal con las siguientes propiedades:\n\n- **FiscalID** (number): El identificador único del fiscal.\n    \n- **Nombre** (string): El nombre del fiscal.\n    \n- **CorreoElectronico** (string): La dirección de correo electrónico del fiscal.\n    \n- **Usuario** (string): El nombre de usuario del fiscal.\n    \n- **Rol** (string): El rol asignado al fiscal.\n    \n- **FiscaliaID** (number): El identificador único de la fiscalía.\n    \n- **Permisos** (string): Los permisos asignados al fiscal.\n    \n\n``` json\n[\n    {\n        \"FiscalID\": 0,\n        \"Nombre\": \"\",\n        \"CorreoElectronico\": \"\",\n        \"Usuario\": \"\",\n        \"Rol\": \"\",\n        \"FiscaliaID\": 0,\n        \"Permisos\": \"\"\n    }\n]\n\n ```"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "test",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{local}}:3000/",
+							"host": [
+								"{{local}}"
+							],
+							"port": "3000",
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "local",
+			"value": "127.0.0.1",
+			"type": "string"
+		}
+	]
+}

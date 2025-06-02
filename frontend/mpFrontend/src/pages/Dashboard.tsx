@@ -1,9 +1,14 @@
-// src/components/Dashboard.tsx
+// src/pages/Dashboard.tsx
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./Dashboard.css";
-import { listarCasos, crearCaso } from "../services/casoService";
-import { agregarInforme } from "../services/casoService";
+import {
+  listarCasos,
+  crearCaso,
+  agregarInforme,
+  listarFiscales,
+  reasignarCaso,
+} from "../services/casoService";
 import type { Fiscal } from "../models/Fiscal";
 import type { Caso } from "../models/Caso";
 import type { Informe } from "../models/Informe";
@@ -12,8 +17,6 @@ export default function Dashboard() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Extraemos el usuario desde el state de la navegación.
-  // Hacemos un “type guard” sencillo para evitar que crashing si location.state viene undefined.
   const state = location.state as { fiscal: Fiscal } | undefined;
   const user = state?.fiscal;
 
@@ -36,6 +39,15 @@ export default function Dashboard() {
   });
   const [errorInforme, setErrorInforme] = React.useState<string | null>(null);
   const [isSubmittingInforme, setIsSubmittingInforme] = React.useState<boolean>(false);
+
+  const [showAssignModal, setShowAssignModal] = React.useState<boolean>(false);
+  const [fiscales, setFiscales] = React.useState<Fiscal[]>([]);
+  const [loadingFiscales, setLoadingFiscales] = React.useState<boolean>(false);
+  const [errorFiscales, setErrorFiscales] = React.useState<string | null>(null);
+  const [selectedFiscalID, setSelectedFiscalID] = React.useState<number | null>(null);
+  const [isSubmittingAssign, setIsSubmittingAssign] = React.useState<boolean>(false);
+  const [errorAssign, setErrorAssign] = React.useState<string | null>(null);
+
   const handleOpenModal = (casoID: number) => {
     setSelectedCasoID(casoID);
     setInformeData({
@@ -48,13 +60,25 @@ export default function Dashboard() {
     setShowModal(true);
   };
 
-  // Si por alguna razón no llegó el usuario, redirigimos de vuelta al Login.
+  const handleOpenAssignModal = (casoID: number) => {
+    setSelectedCasoID(casoID);
+    setShowAssignModal(true);
+    setLoadingFiscales(true);
+    setErrorFiscales(null);
+    listarFiscales()
+      .then((data) => {
+        setFiscales(data);
+      })
+      .catch((err) => setErrorFiscales(err.message || "Error al cargar fiscales"))
+      .finally(() => setLoadingFiscales(false));
+  };
+
+  // Cargar casos al montar
   React.useEffect(() => {
     if (!user) {
-      navigate("/", { replace: true });
+      navigate("/login", { replace: true });
       return;
     }
-    // Al entrar, llamar al endpoint listarCasos
     setLoadingCasos(true);
     setErrorCasos(null);
     listarCasos(user.CorreoElectronico)
@@ -64,7 +88,6 @@ export default function Dashboard() {
   }, [user, navigate]);
 
   if (!user) {
-    // Mientras redirigimos (o si no hay user), podemos devolver null o un mensaje de carga.
     return null;
   }
 
@@ -75,14 +98,19 @@ export default function Dashboard() {
   return (
     <>
       <div className="dashboard-container">
-        <h1 className="dashboard-title">Bienvenido {user.Usuario}</h1>
+        <div className="dashboard-header">
+          <h1 className="dashboard-title">Bienvenido {user.Usuario}</h1>
+          <button
+            className="logout-button"
+            onClick={() => navigate("/")}
+          >
+            Logout
+          </button>
+        </div>
         <div className="dashboard-card">
           <p>
             <strong>{user.Rol}:</strong> {user.Nombre}
           </p>
-          {/* Si tu User tuviera más campos, muéstralos aquí */}
-          {/* <p><strong>Nombre:</strong> {user.nombre}</p>
-          <p><strong>Rol:</strong> {user.rol}</p> */}
           {typeof user.Permisos === "string" && user.Permisos.includes("CREAR_CASO") && !showForm && (
             <button className="dashboard-button" onClick={() => setShowForm(true)} disabled={isCreating}>
               Crear Caso
@@ -102,10 +130,8 @@ export default function Dashboard() {
               };
               crearCaso(nuevoCasoPayload)
                 .then(() => {
-                  // Al crear exitosamente, ocultar el formulario, limpiar descripción
                   setShowForm(false);
                   setDescripcion("");
-                  // Recargar la lista de casos
                   setLoadingCasos(true);
                   return listarCasos(user.CorreoElectronico);
                 })
@@ -182,7 +208,12 @@ export default function Dashboard() {
                             Modificar
                           </button>
                           {user.Rol === "SUPERVISOR" && (
-                            <button className="case-button assign-button">Asignar</button>
+                            <button
+                              className="case-button assign-button"
+                              onClick={() => handleOpenAssignModal(caso.CasoID)}
+                            >
+                              Asignar
+                            </button>
                           )}
                         </td>
                       </tr>
@@ -194,6 +225,8 @@ export default function Dashboard() {
           )}
         </div>
       </div>
+
+      {/* Modal para agregar informe */}
       {showModal && selectedCasoID !== null && (
         <div className="modal-overlay">
           <div className="modal-content">
@@ -285,7 +318,70 @@ export default function Dashboard() {
           </div>
         </div>
       )}
+
+      {/* Modal para reasignar caso */}
+      {showAssignModal && selectedCasoID !== null && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h2>Reasignar Caso {selectedCasoID}</h2>
+            {loadingFiscales ? (
+              <p>Cargando fiscales...</p>
+            ) : errorFiscales ? (
+              <p style={{ color: "#dc2626" }}>{errorFiscales}</p>
+            ) : (
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  if (!selectedCasoID || !selectedFiscalID) return;
+                  setErrorAssign(null);
+                  setIsSubmittingAssign(true);
+                  reasignarCaso(selectedCasoID, selectedFiscalID)
+                    .then((res) => {
+                      alert(res.mensaje);
+                      setShowAssignModal(false);
+                    })
+                    .catch((err) => {
+                      setErrorAssign(err.message || "Error al reasignar caso");
+                    })
+                    .finally(() => {
+                      setIsSubmittingAssign(false);
+                    });
+                }}
+              >
+                <label>
+                  Selecciona Fiscal:
+                  <select
+                    value={selectedFiscalID ?? ""}
+                    onChange={(e) => setSelectedFiscalID(Number(e.target.value))}
+                    required
+                    disabled={isSubmittingAssign}
+                  >
+                    <option value="">--Seleccione--</option>
+                    {fiscales.map((fiscal) => (
+                      <option key={fiscal.FiscalID} value={fiscal.FiscalID}>
+                        {fiscal.Nombre} ({fiscal.Usuario})
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                {errorAssign && <p className="modal-error">{errorAssign}</p>}
+                <div className="modal-buttons">
+                  <button
+                    type="button"
+                    onClick={() => setShowAssignModal(false)}
+                    disabled={isSubmittingAssign}
+                  >
+                    Cancelar
+                  </button>
+                  <button type="submit" disabled={isSubmittingAssign}>
+                    {isSubmittingAssign ? "Asignando..." : "Asignar"}
+                  </button>
+                </div>
+              </form>
+            )}
+          </div>
+        </div>
+      )}
     </>
   );
 }
-// Se eliminó el objeto styles; ahora se usa CSS en Dashboard.css

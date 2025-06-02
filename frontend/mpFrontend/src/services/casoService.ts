@@ -1,6 +1,8 @@
 import type { Caso } from "../models/Caso";
+import type { Fiscal } from "../models/Fiscal";
 import type { Informe } from "../models/Informe";
 import type { NuevoCaso } from "../models/NuevoCaso";
+import type { Reasignar } from "../models/Reasignar";
 import { request } from "./api";
 
 /**
@@ -9,14 +11,14 @@ import { request } from "./api";
  * @returns Promise<Caso[]> Arreglo de casos
  */
 export async function listarCasos(correoElectronico: string): Promise<Caso[]> {
-    console.log({'CorreoListar':correoElectronico})
-    return request<Caso[]>("/casos", {
-      method: "GET",
-      headers: {
-        correoElectronico,
-      },
-    });
-  }
+  console.log({ CorreoListar: correoElectronico });
+  return request<Caso[]>("/casos", {
+    method: "GET",
+    headers: {
+      correoElectronico,
+    },
+  });
+}
 
 /**
  * Crea un nuevo caso usando el modelo NuevoCaso.
@@ -32,8 +34,6 @@ export async function crearCaso(
   });
 }
 
-
-
 /**
  * Envía un nuevo informe asociado a un caso.
  * @param informe Datos del informe excepto correoElectronico y casoID.
@@ -42,7 +42,7 @@ export async function crearCaso(
  * @returns Promise<{ nuevoInformeID: number }> ID del informe creado.
  */
 export async function agregarInforme(
-  informe: Omit<Informe, 'correoElectronico' | 'casoID'>,
+  informe: Omit<Informe, "correoElectronico" | "casoID">,
   correoElectronico: string,
   casoID: number
 ): Promise<{ nuevoInformeID: number }> {
@@ -53,5 +53,29 @@ export async function agregarInforme(
       idCaso: casoID.toString(),
     },
     body: informe,
+  });
+}
+
+/**
+ * Obtener lista de fiscales.
+ */
+export async function listarFiscales(): Promise<Fiscal[]> {
+  return request<Fiscal[]>("/fiscales", {
+    method: "GET",
+  });
+}
+
+/**
+ * Reasignar un caso a otro fiscal.
+ */
+export async function reasignarCaso(
+  casoID: number,
+  nuevoFiscalID: number
+): Promise<{ mensaje: string }> {
+  const reas: Reasignar = { casoID, nuevoFiscalID };
+  console.table(reas);
+  return request<{ mensaje: string }>("/casos/reasignar", {
+    method: "POST",
+    body: reas,
   });
 }
